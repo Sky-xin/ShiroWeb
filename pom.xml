@@ -10,6 +10,9 @@
 	<properties>
 		<!-- mybatis版本号 -->
 		<mybatis.version>3.2.6</mybatis.version>
+		<!-- log4j日志文件管理包版本 -->
+		<slf4j.version>1.7.7</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -169,8 +172,25 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-
-		<!-- Velocity模板 -->
+		<!-- log4j 日志文件配置 start-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- log4j 日志文件配置 end-->
+		
+		<!-- Velocity模板  start-->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
@@ -181,7 +201,7 @@
 			<artifactId>velocity-tools-generic</artifactId>
 			<version>1.4</version>
 		</dependency>
-
+		<!-- Velocity模板  end-->
 	</dependencies>
 	<build>
 		<finalName>ShiroWeb</finalName>
