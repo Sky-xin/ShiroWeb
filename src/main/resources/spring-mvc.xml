@@ -31,7 +31,7 @@
 	</bean>
 	<!-- 开启controller注解支持 -->
 	<!-- 注意事项请参考：http://jinnianshilongnian.iteye.com/blog/1762632 -->
-	<context:component-scan base-package="com.vpcloud.shiro.controller.web"
+	<context:component-scan base-package="com.vpcloud.shiro.controller.*"
 		use-default-filters="false">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
@@ -52,7 +52,7 @@
 	<!-- 视图模式配置,velocity配置文件 -->
 	<bean id="velocityConfig"
 		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-		<property name="resourceLoaderPath" value="/" />
+		<property name="resourceLoaderPath" value="/WEB-INF/vm/" />
 		<property name="configLocation" value="classpath:velocity.properties" />
 	</bean>
 
