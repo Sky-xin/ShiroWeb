@@ -4,18 +4,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class ViewController {
+public class LoginController {
 	
-	@RequestMapping("/login")
+	@RequestMapping("/loginForm")
 	public String loginForm(HttpServletRequest request,Model model){
-        String name = (String) request.getAttribute("shiroLoginFailure");
+		String name = request.getParameterMap().toString();
+		System.out.println(name);
 		String error = null;
 		if(UnknownAccountException.class.getName().equals(name)){
 			 error = "用户名/密码错误";
@@ -27,17 +26,4 @@ public class ViewController {
 		model.addAttribute("error", error);
 		return "login";
 	}
-	@RequestMapping("/")
-	@ResponseBody
-	public String getTest(){
-		return "hehe";
-	}
-	
-	@RequiresGuest
-	@RequestMapping("/hello")
-	public String testAdmin(){
-		System.out.println("权限测试...");
-		return "test";
-	}
-
 }

@@ -31,6 +31,12 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-digester/commons-digester -->
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>2.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -62,8 +68,8 @@
 			<artifactId>jackson-core-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-web</artifactId>
@@ -90,7 +96,7 @@
 			<artifactId>druid</artifactId>
 			<version>0.2.23</version>
 		</dependency>
-		
+
 		<!-- 上传组件包start -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -172,7 +178,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		<!-- log4j 日志文件配置 start-->
+		<!-- log4j 日志文件配置 start -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -188,9 +194,9 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		<!-- log4j 日志文件配置 end-->
-		
-		<!-- Velocity模板  start-->
+		<!-- log4j 日志文件配置 end -->
+
+		<!-- Velocity模板 start -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
@@ -201,7 +207,14 @@
 			<artifactId>velocity-tools-generic</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<!-- Velocity模板  end-->
+		<!-- 工具类 -->
+		<dependency>
+			<groupId>velocity-tools</groupId>
+			<artifactId>velocity-tools</artifactId>
+			<version>2.0-beta1</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Velocity模板 end -->
 	</dependencies>
 	<build>
 		<finalName>ShiroWeb</finalName>

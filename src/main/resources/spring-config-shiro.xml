@@ -122,6 +122,7 @@
 		</property>
 		<property name="filterChainDefinitions">
 			<value>
+				/index = anon
 				/login = authc
 				/logout = logout
 				/authenticated = authc

@@ -45,7 +45,8 @@
 
 	<!-- 静态资源映射 -->
 	<mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
-
+	
+	
 	<!-- Velocity 模板Bean配置 -->
 	<!-- 视图模式配置,velocity配置文件 -->
 	<bean id="velocityConfig"
@@ -53,7 +54,6 @@
 		<property name="resourceLoaderPath" value="/WEB-INF/vm/" /> <!-- 视图文件模板的路径 -->
 		<property name="configLocation" value="classpath:velocity.properties" />
 	</bean>
-
 	<!-- 配置后缀 -->
 	<bean id="velocityViewResolver"
 		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
@@ -62,7 +62,6 @@
 		<property name="contentType">
 			<value>text/html;charset=UTF-8</value>
 		</property>
-		
 		<property name="exposeRequestAttributes" value="true" /><!--是否开放request属性 -->
 		<property name="requestContextAttribute" value="request" /><!--request属性引用名称 -->
 	</bean>
