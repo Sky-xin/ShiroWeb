@@ -9,18 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class ViewController {
 	
 	@RequestMapping("/login")
-	public ModelAndView goIndex(){
+	public String goIndex(){
 		System.out.println(">>>>>>>>>>>>>>>>>>>");
-		ModelAndView mv = new ModelAndView();
-        mv.addObject("name", "sky");
-        mv.setViewName("index");
-        System.out.println("2");
-        return mv;
+		return "index";
 	}
 	@RequestMapping("/")
 	@ResponseBody
 	public String getTest(){
-		System.out.println("?>>>>>>>>>>>>>>>");
 		return "hehe";
 	}
 
