@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ViewController {
-	
+
 	@RequestMapping("/login")
 	public String loginForm(HttpServletRequest request,Model model){
         String name = (String) request.getAttribute("shiroLoginFailure");
@@ -28,9 +28,8 @@ public class ViewController {
 		return "login";
 	}
 	@RequestMapping("/")
-	@ResponseBody
 	public String getTest(){
-		return "hehe";
+		return "/user/list";
 	}
 	
 	@RequiresGuest
