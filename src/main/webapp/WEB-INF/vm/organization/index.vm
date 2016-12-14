@@ -1,0 +1,63 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<html>
+<head>
+<script
+	src="${pageContext.request.contextPath}/static/js/jquery-1.11.0.min.js"></script>
+<script
+	src="${pageContext.request.contextPath}/static/js/jquery.layout-latest.min.js"></script>
+<script
+	src="${pageContext.request.contextPath}/static/JQuery zTree v3.5.15/js/jquery.ztree.all-3.5.min.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/static/JQuery zTree v3.5.15/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+	
+	<div class="col-md-10">
+		<ul id="tree" class="ztree col-md-3" ></ul>
+		<iframe name="content-compony"  src="" frameborder="0" class="col-md-9"
+			scrolling="auto"></iframe>
+	</div>
+	
+	<div class="col-md-9">
+		
+	
+	</div>
+	
+</body>
+<script>
+	$(function() {
+		
+	$(document).ready(function() {
+		$('body').layout({
+			applyDemoStyles : true
+		});
+	});
+
+	var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback : {
+                onClick : function(event, treeId, treeNode) {
+                    frames['content-compony'].location.href = "${pageContext.request.contextPath}/organization/"+treeNode.id+"/maintain";
+                }
+            }
+        };
+
+        var zNodes =[
+            <c:forEach items="${organizationList}" var="o">
+                { id:${o.id}, pId:${o.parentId}, name:"${o.name}", open:${o.rootNode}},
+            </c:forEach>
+        ];
+        console.log(zNodes);
+
+        $(document).ready(function(){
+            $.fn.zTree.init($("#tree"), setting, zNodes);
+        });
+	});
+</script>
+</html>
