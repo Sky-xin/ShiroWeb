@@ -16,6 +16,13 @@
     
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+    
+
 	<style >
 		/*
          * Base structure
@@ -158,7 +165,7 @@
                 <a href="${request.contextPath}/user/create">用户管理</a>
 			</li>
             <li>
-				<a href="${request.contextPath}/user/create">角色管理</a>
+				<a href="${request.contextPath}/user/role">角色管理</a>
 			</li>
             <li>
 				<a href="${request.contextPath}/user/create">资源管理</a>
@@ -194,9 +201,63 @@
             </div>
           </div>
 		  <h2 class="sub-header" >用户列表</h2>
-          <button type="button" class="btn btn-primary" onclick="">增加用户</button>
-		  <button type="button" class="btn btn-success">Other</button>
 
+			<!-- Button trigger modal -->
+            <button type="button" id="addUser" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+				增加用户
+            </button>
+            <button type="button" class="btn btn-success">Other</button>
+  
+            
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">创建用户</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="user" method="post" action="./user/create">
+                        <div class="form-group">
+                          <label for="username">Email address</label>
+                          <input type="email" name="username" class="form-control" id="username" placeholder="Enter email" required="" >
+                        </div>
+                        <div class="form-group">
+                          <label for="password">Password</label>
+                          <input type="password" name="password"  class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                          <label for="repeat-password">Repeat Password</label>
+                          <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="organizationId">所属组织：</label>
+                            <select id="organizationId" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #foreach($organization in $organizationList)
+									<option value="$organization.id">$organization.name</option>
+								#end
+                            </select>
+                        </div>
+						<div class="form-group">
+                            <label for="roleIds">角色列表：</label>
+                            <select id="roleIds" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #foreach($role in $roleList)
+									<option value="$role.id">$role.description</option>
+								#end
+                            </select>
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="createButton" class="btn btn-primary">创建</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+		  
 		  <h4 class="sub-header"></h4>
           <div class="table-responsive">
 			<table class="table table-striped">
@@ -214,8 +275,24 @@
             			<tr >
 							<th>${user.id}</th>
                             <td>${user.username}</td>
-            				<td>${user.organizationId}</td>
-            				<td>${user.roleIds}</td>
+            				<td>
+								#foreach($org in $organizationList)
+									#if($org.id == ${user.organizationId})
+										$org.name
+									#end
+								#end
+							</td>
+            				<td>
+								
+								#foreach($roleId in ${user.roleIds})
+									#foreach($role in $roleList)
+									#if($role.id == $roleId)
+										$role.description
+									#end
+								#end
+								#end
+								
+							</td>
                             <td>
             					<a href="${request.contextPath}/user/${user.id}/update">修改</a>
             					<a href="${request.contextPath}/user/${user.id}/delete">删除</a>
@@ -231,4 +308,14 @@
     </div>
 
 </body>
+<script>
+	$(function(){
+		$("#createButton").click(function(){
+			$("#user").submit();
+		});
+		$('#usertype').selectpicker({
+   	     'selectedText': 'cat'
+		});
+	});
+</script>
 </html>

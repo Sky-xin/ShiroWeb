@@ -192,11 +192,11 @@
 					<form role="form" id="createForm" method="post" action="/">
                       <div class="form-group">
                         <label for="username">Email address</label>
-                        <input type="email" name="username" class="form-control" id="username" placeholder="Enter email">
+                        <input type="email" name="user.username" class="form-control" id="username" placeholder="Enter email">
                       </div>
                       <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" name="password"  class="form-control" id="password" placeholder="Password">
+                        <input type="password" name="user.password"  class="form-control" id="password" placeholder="Password">
                       </div>
 					  <div class="form-group">
                         <label for="repeat-password">Repeat Password</label>

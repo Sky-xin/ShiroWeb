@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.vpcloud.shiro.pojo.User;
+import com.vpcloud.shiro.service.OrganizationService;
 import com.vpcloud.shiro.service.RoleService;
 import com.vpcloud.shiro.service.UserService;
 
@@ -28,26 +29,31 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
+	@Autowired
+    private OrganizationService organizationService;
+	
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model){
 		String url = "http://4493bz.1985t.com/uploads/allimg/150127/4-15012G52133.jpg";
+		setCommonData(model);
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("url", url);
 		return "/user/list";
 	}
-	@RequiresPermissions("user:create")
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String showCreateForm(Model model) {
-        setCommonData(model);
-        model.addAttribute("userInfo", new User());
-        model.addAttribute("op", "新增");
-        return "/user/edit";
-    }
+//	@RequiresPermissions("user:create")
+//    @RequestMapping(value = "/create", method = RequestMethod.GET)
+//    public String showCreateForm(Model model) {
+//        setCommonData(model);
+//        model.addAttribute("userInfo", new User());
+//        model.addAttribute("op", "新增");
+//        return "/user/edit";
+//    }
 	
 	@RequiresPermissions("user:create")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String create(User user, RedirectAttributes redirectAttributes) {
+		System.out.println(user.toString());
         userService.createUser(user);
         redirectAttributes.addFlashAttribute("msg", "新增成功");
         return "redirect:/user";
@@ -105,7 +111,7 @@ public class UserController {
     }
 	
 	private void setCommonData(Model model) {
-//        model.addAttribute("organizationList", organizationService.findAll());
+        model.addAttribute("organizationList", organizationService.findAll());
         model.addAttribute("roleList", roleService.findAll());
     }
 }
