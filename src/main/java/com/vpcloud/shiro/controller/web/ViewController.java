@@ -14,27 +14,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ViewController {
 
 	@RequestMapping("/login")
-	public String loginForm(HttpServletRequest request,Model model){
-        String name = (String) request.getAttribute("shiroLoginFailure");
+	public String loginForm(HttpServletRequest request, Model model) {
+		String name = (String) request.getAttribute("shiroLoginFailure");
 		String error = null;
-		if(UnknownAccountException.class.getName().equals(name)){
-			 error = "用户名/密码错误";
-		}else if (IncorrectCredentialsException.class.getName().equals(name)){
+		if (UnknownAccountException.class.getName().equals(name)) {
 			error = "用户名/密码错误";
-		}else if(name != null) {
-            error = "其他错误：" + name;
-        }
+		} else if (IncorrectCredentialsException.class.getName().equals(name)) {
+			error = "用户名/密码错误";
+		} else if (name != null) {
+			error = "其他错误：" + name;
+		}
 		model.addAttribute("error", error);
 		return "login";
 	}
+
 	@RequestMapping("/")
-	public String getTest(){
+	public String getTest() {
 		return "/user/list";
 	}
-	
+
 	@RequiresGuest
 	@RequestMapping("/hello")
-	public String testAdmin(){
+	public String testAdmin() {
 		System.out.println("权限测试...");
 		return "test";
 	}

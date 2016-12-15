@@ -35,20 +35,12 @@ public class UserController {
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model){
-		String url = "http://4493bz.1985t.com/uploads/allimg/150127/4-15012G52133.jpg";
+		String url = "http://i.dimg.cc/8f/3c/9f/39/8e/48/0b/b4/ff/0d/a8/8a/62/22/f3/6a.jpg";
 		setCommonData(model);
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("url", url);
 		return "/user/list";
 	}
-//	@RequiresPermissions("user:create")
-//    @RequestMapping(value = "/create", method = RequestMethod.GET)
-//    public String showCreateForm(Model model) {
-//        setCommonData(model);
-//        model.addAttribute("userInfo", new User());
-//        model.addAttribute("op", "新增");
-//        return "/user/edit";
-//    }
 	
 	@RequiresPermissions("user:create")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -59,53 +51,32 @@ public class UserController {
         return "redirect:/user";
     }
 	
-	@RequiresPermissions("user:update")
-    @RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
-    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-        setCommonData(model);
-        model.addAttribute("userInfo", userService.findOne(id));
-        model.addAttribute("op", "修改");
-        return "/user/edit";
-    }
 	
 	@RequiresPermissions("user:update")
-    @RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/update")
     public String update(User user, RedirectAttributes redirectAttributes) {
         userService.updateUser(user);
         redirectAttributes.addFlashAttribute("msg", "修改成功");
         return "redirect:/user";
     }
 
-    @RequiresPermissions("user:delete")
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
-    public String showDeleteForm(@PathVariable("id") Long id, Model model) {
-        setCommonData(model);
-        model.addAttribute("userInfo", userService.findOne(id));
-        model.addAttribute("op", "删除");
-        return "/user/edit";
-    }
 
     @RequiresPermissions("user:delete")
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/delete")
     public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        userService.deleteUser(id);
+        System.out.println(id+">>>>>>>>>>");
+    	userService.deleteUser(id);
         redirectAttributes.addFlashAttribute("msg", "删除成功");
         return "redirect:/user";
     }
 
 
-    @RequiresPermissions("user:update")
-    @RequestMapping(value = "/{id}/changePassword", method = RequestMethod.GET)
-    public String showChangePasswordForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("userInfo", userService.findOne(id));
-        model.addAttribute("op", "修改密码");
-        return "user/changePassword";
-    }
+   
 
     @RequiresPermissions("user:update")
     @RequestMapping(value = "/{id}/changePassword", method = RequestMethod.POST)
     public String changePassword(@PathVariable("id") Long id, String newPassword, RedirectAttributes redirectAttributes) {
-        userService.changePassword(id, newPassword);
+    	userService.changePassword(id, newPassword);
         redirectAttributes.addFlashAttribute("msg", "修改密码成功");
         return "redirect:/user";
     }

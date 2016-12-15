@@ -22,6 +22,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
     
+	<script >
+	
+    </script>
 
 	<style >
 		/*
@@ -150,6 +153,7 @@
             <li><a href="#">设置</a></li>
             <li><a href="#">参数简介</a></li>
             <li><a href="#">帮助</a></li>
+			<li><a href="./logout">退出</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="查找...">
@@ -203,14 +207,14 @@
 		  <h2 class="sub-header" >用户列表</h2>
 
 			<!-- Button trigger modal -->
-            <button type="button" id="addUser" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            <button type="button" id="addUser" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
 				增加用户
             </button>
             <button type="button" class="btn btn-success">Other</button>
   
             
             <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -218,7 +222,7 @@
                     <h4 class="modal-title" id="myModalLabel">创建用户</h4>
                   </div>
                   <div class="modal-body">
-					<form role="form" id="user" method="post" action="./user/create">
+					<form role="form" id="userForm" method="post" action="./user/create">
                         <div class="form-group">
                           <label for="username">Email address</label>
                           <input type="email" name="username" class="form-control" id="username" placeholder="Enter email" required="" >
@@ -233,17 +237,19 @@
                         </div>
                         <div class="form-group">
                             <label for="organizationId">所属组织：</label>
-                            <select id="organizationId" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
-                                #foreach($organization in $organizationList)
+                            <select id="organizationId" class="selectRow" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #foreach($organization in $!organizationList)
 									<option value="$organization.id">$organization.name</option>
 								#end
                             </select>
                         </div>
 						<div class="form-group">
                             <label for="roleIds">角色列表：</label>
-                            <select id="roleIds" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
-                                #foreach($role in $roleList)
-									<option value="$role.id">$role.description</option>
+                            <select id="roleIds" class="selectRow" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #if( $roleList)
+    								#foreach($role in $!roleList)
+    									<option value="$role.id">$role.description</option>
+    								#end
 								#end
                             </select>
                         </div>
@@ -257,7 +263,53 @@
                 </div>
               </div>
             </div>
-		  
+			<!--changePassword Modal -->
+			<div class="modal fade" id="changeUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">用户密码修改</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="changeForm" method="post" action="${request.contextPath}/user/${user.id}/changePassword">
+                        <div class="form-group">
+                          <label for="password">Password</label>
+                          <input type="password" name="newPassword"  class="form-control" id="password" placeholder="New Password">
+                        </div>
+                        <div class="form-group">
+                          <label for="repeat-password">Repeat Password</label>
+                          <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password">
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="changeButton" class="btn btn-primary">修改</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<!--delete Modal -->
+			<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">删除用户</h4>
+                  </div>
+                  <div class="modal-body">
+					<span id="deleteInfo">
+                    </span>
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <a type="button" id="deleteButton" class="btn btn-primary">确定</a>
+                  </div>
+                </div>
+              </div>
+            </div>
 		  <h4 class="sub-header"></h4>
           <div class="table-responsive">
 			<table class="table table-striped">
@@ -294,9 +346,9 @@
 								
 							</td>
                             <td>
-            					<a href="${request.contextPath}/user/${user.id}/update">修改</a>
-            					<a href="${request.contextPath}/user/${user.id}/delete">删除</a>
-            					<a href="${request.contextPath}/user/${user.id}/changePassword">改密</a> 
+								<a class="btn btn-default btn-xs" href="${request.contextPath}/user/${user.id}/update"><span class="glyphicon glyphicon-edit"></span></a>
+            					<a class="btn btn-default btn-xs" onclick="javascript:deleteUser(${user.id},'${user.username}')" data-toggle="modal" data-target="#deleteUserModal"><span class="glyphicon glyphicon-trash"></span></a>
+            					<a class="btn btn-default btn-xs" onclick="javascript:changePassword(${user.id},'${user.username}')" data-toggle="modal" data-target="#changeUserModal"><span class="glyphicon glyphicon-cog"></span></a> 
             				</td>
                         </tr>
             		#end
@@ -309,13 +361,25 @@
 
 </body>
 <script>
-	$(function(){
-		$("#createButton").click(function(){
-			$("#user").submit();
-		});
-		$('#usertype').selectpicker({
-   	     'selectedText': 'cat'
-		});
+	function changePassword(id,name){
+		$("#changeForm").attr("action","/ShiroWeb/user/"+id+"/changePassword")
+		//alert($("#changeForm").attr("action"))
+	}
+	function deleteUser(id,name){
+		$("#deleteInfo").html("确定删除："+name+"?");
+		$("#deleteButton").attr("href","${request.contextPath}/user/"+id+"/delete");
+		
+	}
+	$("#createButton").click(function(){
+		$("#userForm").submit();
 	});
+	$("#changeButton").click(function(){
+		$("#changeForm").submit();
+	});
+	//href="${request.contextPath}/user/${user.id}/delete"  deleteUserModal
+	$('.selectRow').selectpicker({
+		size: 4
+	});
+	
 </script>
 </html>
