@@ -35,7 +35,7 @@ public class UserController {
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model){
-		String url = "http://i.dimg.cc/8f/3c/9f/39/8e/48/0b/b4/ff/0d/a8/8a/62/22/f3/6a.jpg";
+		String url = "/ShiroWeb/static/img/yourName.jpg";
 		setCommonData(model);
 		model.addAttribute("userList", userService.findAll());
 		model.addAttribute("url", url);
@@ -51,11 +51,16 @@ public class UserController {
         return "redirect:/user";
     }
 	
-	
 	@RequiresPermissions("user:update")
     @RequestMapping(value = "/{id}/update")
-    public String update(User user, RedirectAttributes redirectAttributes) {
-        userService.updateUser(user);
+    public String update(User user,@PathVariable("id") Long id,  RedirectAttributes redirectAttributes) {
+		User oldUser = userService.findOne(id);
+		oldUser.setLocked(user.getLocked());
+		oldUser.setOrganizationId(user.getOrganizationId());
+		oldUser.setRoleIds(user.getRoleIds());
+		System.out.println(user);
+		System.out.println(oldUser);
+		userService.updateUser(oldUser);
         redirectAttributes.addFlashAttribute("msg", "修改成功");
         return "redirect:/user";
     }

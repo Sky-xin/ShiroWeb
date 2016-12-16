@@ -21,10 +21,6 @@
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-    
-	<script >
-	
-    </script>
 
 	<style >
 		/*
@@ -145,15 +141,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="http://v3.bootcss.com/examples/dashboard/#">RuiBoTai--UserAdmin</a>
+          <a class="navbar-brand" href="${request.contextPath}/user">RuiBoTai: 欢迎,$user.username</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">服务器状态</a></li>
             <li><a href="#">设置</a></li>
             <li><a href="#">参数简介</a></li>
-            <li><a href="#">帮助</a></li>
-			<li><a href="./logout">退出</a></li>
+            <li><a href="${request.contextPath}/help">帮助</a></li>
+			<li><a href="${request.contextPath}/logout">退出</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="查找...">
@@ -219,7 +215,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">创建用户</h4>
+                    <h4 class="modal-title" id="userModalLabel">创建用户</h4>
                   </div>
                   <div class="modal-body">
 					<form role="form" id="userForm" method="post" action="./user/create">
@@ -274,12 +270,12 @@
                   <div class="modal-body">
 					<form role="form" id="changeForm" method="post" action="${request.contextPath}/user/${user.id}/changePassword">
                         <div class="form-group">
-                          <label for="password">Password</label>
-                          <input type="password" name="newPassword"  class="form-control" id="password" placeholder="New Password">
+                          <label for="change-password">Password</label>
+                          <input type="password" name="newPassword"  class="form-control" id="change-password" placeholder="New Password">
                         </div>
-                        <div class="form-group">
-                          <label for="repeat-password">Repeat Password</label>
-                          <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password">
+                        <div class="form-group" id="repearPassword">
+                          <label for="change-repeat-password">Repeat Password</label>
+                          <input type="password" class="form-control" id="change-repeat-password" placeholder="Repeat Password">
                         </div>
                     </form>
 
@@ -306,6 +302,48 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <a type="button" id="deleteButton" class="btn btn-primary">确定</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<!--update Modal -->
+            <div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="updateModalLabel">修改用户信息</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="updateForm" method="post" action="./user/create">
+                        <div class="form-group">
+                          <label for="updata-username">Email address</label>
+                          <input type="email" name="username" class="form-control" id="updata-username" placeholder="Enter email" required="" >
+                        </div>
+                        <div class="form-group">
+                            <label for="update-organizationId">所属组织：</label>
+                            <select id="update-organizationId" class="selectRow" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #foreach($organization in $!organizationList)
+									<option value="$organization.id">$organization.name</option>
+								#end
+                            </select>
+                        </div>
+						<div class="form-group">
+                            <label for="update-roleIds">角色列表：</label>
+                            <select id="update-roleIds" class="selectRow" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
+                                #if( $roleList)
+    								#foreach($role in $!roleList)
+    									<option value="$role.id">$role.description</option>
+    								#end
+								#end
+                            </select>
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="updateButton" class="btn btn-primary">创建</button>
                   </div>
                 </div>
               </div>
@@ -346,7 +384,7 @@
 								
 							</td>
                             <td>
-								<a class="btn btn-default btn-xs" href="${request.contextPath}/user/${user.id}/update"><span class="glyphicon glyphicon-edit"></span></a>
+								<a class="btn btn-default btn-xs" onclick="javascript:changeInfo(${user.id},'${user.username}','${user.organizationId}','${user.roleIds}')" data-toggle="modal" data-target="#updateUserModal"><span class="glyphicon glyphicon-edit"></span></a>
             					<a class="btn btn-default btn-xs" onclick="javascript:deleteUser(${user.id},'${user.username}')" data-toggle="modal" data-target="#deleteUserModal"><span class="glyphicon glyphicon-trash"></span></a>
             					<a class="btn btn-default btn-xs" onclick="javascript:changePassword(${user.id},'${user.username}')" data-toggle="modal" data-target="#changeUserModal"><span class="glyphicon glyphicon-cog"></span></a> 
             				</td>
@@ -362,16 +400,21 @@
 </body>
 <script>
 	function changePassword(id,name){
-		$("#changeForm").attr("action","/ShiroWeb/user/"+id+"/changePassword")
-		//alert($("#changeForm").attr("action"))
+		$("#changeForm").attr("action","${request.contextPath}/user/"+id+"/changePassword")
 	}
 	function deleteUser(id,name){
 		$("#deleteInfo").html("确定删除："+name+"?");
 		$("#deleteButton").attr("href","${request.contextPath}/user/"+id+"/delete");
-		
+	}
+	function changeInfo(id,username,org,roles){
+		$("#updata-username").val(username);
+		$("#updateForm").attr("action","${request.contextPath}/user/"+id+"/update");
 	}
 	$("#createButton").click(function(){
 		$("#userForm").submit();
+	});
+	$("#updateButton").click(function(){
+		$("#updateForm").submit();
 	});
 	$("#changeButton").click(function(){
 		$("#changeForm").submit();

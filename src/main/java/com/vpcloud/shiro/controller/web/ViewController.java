@@ -30,7 +30,12 @@ public class ViewController {
 
 	@RequestMapping("/")
 	public String getTest() {
-		return "/user/list";
+		return "redirect:/user";
+	}
+	
+	@RequestMapping("/help")
+	public String getHelp() {
+		return "help";
 	}
 
 	@RequiresGuest
