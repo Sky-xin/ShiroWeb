@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>用户管理</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap.min.css">
+    
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-theme.css">
+    
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="${request.contextPath}/static/js/jquery.min.js"></script>
+    
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="${request.contextPath}/static/js/bootstrap.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-select.min.css">
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="${request.contextPath}/static/js/bootstrap-select.min.js"></script>
+
+	<link rel="stylesheet" href="${request.contextPath}/static/css/list.css">
+    
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="${request.contextPath}/user">RuiBoTai: 欢迎,$user.username</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">服务器状态</a></li>
+            <li><a href="#">设置</a></li>
+            <li><a href="#">参数简介</a></li>
+            <li><a href="${request.contextPath}/help">帮助</a></li>
+			<li><a href="${request.contextPath}/logout">退出</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="查找...">
+          </form>
+        </div>
+      </div>
+    </nav>
+	<div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active">
+                <a href="${request.contextPath}/user/">用户管理</a>
+			</li>
+            <li>
+				<a href="${request.contextPath}/role/">角色管理</a>
+			</li>
+            <li>
+				<a href="${request.contextPath}/resource/">资源管理</a>
+			</li>
+            <li>
+				<a href="${request.contextPath}/organization/">其他信息</a>
+			</li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">服务器状态</h1>
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>JVM状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>DB状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>Network状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>连接用户数</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+          </div>
+		  <h2 class="sub-header" >用户列表</h2>
+
+			<!-- Button trigger modal -->
+            <button type="button" id="addUser" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
+				增加用户
+            </button>
+            <button type="button" class="btn btn-success">Other</button>
+  
+            
+            <!-- Modal -->
+            <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="userModalLabel">创建用户</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="userForm" method="post" action="./user/create">
+                        <div class="form-group">
+                          <label for="username">Email address</label>
+                          <input type="email" name="username" class="form-control" id="username" placeholder="Enter email" required="" >
+                        </div>
+                        <div class="form-group">
+                          <label for="password">Password</label>
+                          <input type="password" name="password"  class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                          <label for="repeat-password">Repeat Password</label>
+                          <input type="password" class="form-control" id="repeat-password" placeholder="Repeat Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="organizationId">所属组织：</label>
+                            <select id="organizationId"  class="selectpicker show-tick form-control" name="organizationId" multiple data-live-search="false">
+                                #foreach($organization in $!organizationList)
+									<option value="$organization.id">$organization.name</option>
+								#end
+                            </select>
+                        </div>
+						<div class="form-group">
+                            <label for="roleIds">角色列表：</label>
+                            <select id="roleIds" class="show-tick form-control selectRow"  name="roleIds"  multiple data-live-search="false">
+                                #if( $roleList)
+    								#foreach($role in $!roleList)
+    									<option value="$role.id">$role.description</option>
+    								#end
+								#end
+                            </select>
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="createButton" class="btn btn-primary">创建</button>
+                  </div>
+                </div>
+              </div>
+            </div><!-- Modal end-->
+			<!--changePassword Modal -->
+			<div class="modal fade" id="changeUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">用户密码修改</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="changeForm" method="post" action="${request.contextPath}/user/${user.id}/changePassword">
+                        <div class="form-group">
+                          <label for="change-password">Password</label>
+                          <input type="password" name="newPassword"  class="form-control" id="change-password" placeholder="New Password">
+                        </div>
+                        <div class="form-group" id="repearPassword">
+                          <label for="change-repeat-password">Repeat Password</label>
+                          <input type="password" class="form-control" id="change-repeat-password" placeholder="Repeat Password">
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="changeButton" class="btn btn-primary">修改</button>
+                  </div>
+                </div>
+              </div>
+            </div><!--changePassword Modal end -->
+			<!--delete Modal -->
+			<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">删除用户</h4>
+                  </div>
+                  <div class="modal-body">
+					<span id="deleteInfo">
+                    </span>
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <a type="button" id="deleteButton" class="btn btn-primary">确定</a>
+                  </div>
+                </div>
+              </div>
+            </div><!--delete Modal end-->
+			<!--update Modal -->
+            <div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="updateModalLabel">修改用户信息</h4>
+                  </div>
+                  <div class="modal-body">
+					<form role="form" id="updateForm" method="post" action="./user/create">
+                        <div class="form-group">
+                          <label for="updata-username">Email address</label>
+                          <input type="email" name="username" class="form-control" id="updata-username" placeholder="Enter email" required="" >
+                        </div>
+                        <div class="form-group">
+                            <label for="update-organizationId">所属组织：</label>
+                            <select id="update-organizationId" class="selectpicker show-tick form-control" name="organizationId"  multiple data-live-search="false">
+                                #foreach($organization in $!organizationList)
+									<option value="$organization.id">$organization.name</option>
+								#end
+                            </select>
+                        </div>
+						<div class="form-group">
+                            <label for="update-roleIds">角色列表：</label>
+                            <select id="update-roleIds" class="selectpicker show-tick form-control" name="roleIds"  multiple data-live-search="false">
+                                #if( $roleList)
+    								#foreach($role in $!roleList)
+    									<option value="$role.id">$role.description</option>
+    								#end
+								#end
+                            </select>
+                        </div>
+                    </form>
+
+				  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="updateButton" class="btn btn-primary">创建</button>
+                  </div>
+                </div>
+              </div>
+            </div><!--update Modal end-->
+		  <h4 class="sub-header"></h4>
+          <div class="table-responsive">
+			<table class="table table-striped">
+                <thead>
+                    <tr>
+						<th>#</th>
+                        <th>用户名</th>
+                        <th>所属组织</th>
+                        <th>角色列表</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+            		#foreach($user in $!userList)
+            			<tr >
+							<th>${user.id}</th>
+                            <td>${user.username}</td>
+            				<td>
+								#foreach($org in $organizationList)
+									#if($org.id == ${user.organizationId})
+										$org.name
+									#end
+								#end
+							</td>
+            				<td>
+								
+								#foreach($roleId in ${user.roleIds})
+									#foreach($role in $roleList)
+									#if($role.id == $roleId)
+										$role.description
+									#end
+								#end
+								#end
+								
+							</td>
+                            <td>
+								<a class="btn btn-default btn-xs" onclick="javascript:changeInfo(${user.id},'${user.username}','${user.organizationId}','${user.roleIds}')" data-toggle="modal" data-target="#updateUserModal"><span class="glyphicon glyphicon-edit"></span></a>
+            					<a class="btn btn-default btn-xs" onclick="javascript:deleteUser(${user.id},'${user.username}')" data-toggle="modal" data-target="#deleteUserModal"><span class="glyphicon glyphicon-trash"></span></a>
+            					<a class="btn btn-default btn-xs" onclick="javascript:changePassword(${user.id},'${user.username}')" data-toggle="modal" data-target="#changeUserModal"><span class="glyphicon glyphicon-cog"></span></a> 
+            				</td>
+                        </tr>
+            		#end
+                </tbody>
+            </table>
+          </div><!-- table div end -->
+        </div>
+      </div>
+    </div>
+
+</body>
+<script>
+	function changePassword(id,name){
+		$("#changeForm").attr("action","${request.contextPath}/user/"+id+"/changePassword")
+	}
+	function deleteUser(id,name){
+		$("#deleteInfo").html("确定删除："+name+"?");
+		$("#deleteButton").attr("href","${request.contextPath}/user/"+id+"/delete");
+	}
+	function changeInfo(id,username,org,roles){
+		$("#updata-username").val(username);
+		$("#updateForm").attr("action","${request.contextPath}/user/"+id+"/update");
+	}
+	$("#createButton").click(function(){
+		$("#userForm").submit();
+	});
+	$("#updateButton").click(function(){
+		$("#updateForm").submit();
+	});
+	$("#changeButton").click(function(){
+		$("#changeForm").submit();
+	});
+	//href="${request.contextPath}/user/${user.id}/delete"  deleteUserModal
+	$('.selectRow').selectpicker({
+		size: 4
+	});
+
+
+	
+</script>
+</html>
