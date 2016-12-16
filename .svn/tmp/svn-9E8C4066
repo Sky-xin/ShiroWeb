@@ -127,7 +127,7 @@
                         </div>
                         <div class="form-group">
                             <label for="organizationId">所属组织：</label>
-                            <select id="organizationId"  class="selectpicker show-tick form-control" name="organizationId" multiple data-live-search="false">
+                            <select id="organizationId" class="selectRow" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
                                 #foreach($organization in $!organizationList)
 									<option value="$organization.id">$organization.name</option>
 								#end
@@ -135,7 +135,7 @@
                         </div>
 						<div class="form-group">
                             <label for="roleIds">角色列表：</label>
-                            <select id="roleIds" class="show-tick form-control selectRow"  name="roleIds"  multiple data-live-search="false">
+                            <select id="roleIds" class="selectRow" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
                                 #if( $roleList)
     								#foreach($role in $!roleList)
     									<option value="$role.id">$role.description</option>
@@ -216,7 +216,7 @@
                         </div>
                         <div class="form-group">
                             <label for="update-organizationId">所属组织：</label>
-                            <select id="update-organizationId" class="selectpicker show-tick form-control" name="organizationId"  multiple data-live-search="false">
+                            <select id="update-organizationId" class="selectRow" name="organizationId" class="selectpicker show-tick form-control" multiple data-live-search="false">
                                 #foreach($organization in $!organizationList)
 									<option value="$organization.id">$organization.name</option>
 								#end
@@ -224,7 +224,7 @@
                         </div>
 						<div class="form-group">
                             <label for="update-roleIds">角色列表：</label>
-                            <select id="update-roleIds" class="selectpicker show-tick form-control" name="roleIds"  multiple data-live-search="false">
+                            <select id="update-roleIds" class="selectRow" name="roleIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
                                 #if( $roleList)
     								#foreach($role in $!roleList)
     									<option value="$role.id">$role.description</option>
