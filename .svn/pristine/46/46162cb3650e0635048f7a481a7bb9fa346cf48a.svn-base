@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>资源管理</title>
+    <title></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="${request.contextPath}/">RuiBoTai: 欢迎,$user.username</a>
+          <a class="navbar-brand" href="${request.contextPath}/user">RuiBoTai: 欢迎,$user.username</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -97,18 +97,18 @@
                     </div>
                     <div class="form-group">
                       <label for="urlName">URL路径:</label>
-                      <input type="text" class="form-control" name ="url" id="urlName" placeholder="输入权限访问路径，如：/user">
+                      <input type="url" class="form-control" id="urlName" placeholder="输入权限访问路径，如：/user">
                     </div>
                     <div class="form-group">
                         <label for="permissionStr">权限字符串:</label>
-                        <input type="text" class="form-control" id="permissionStr" name="permission" placeholder="输入权限字符串，如：resource:*">
+                        <input type="permission" class="form-control" id="permissionStr" placeholder="输入权限字符串，如：resource:*">
                     </div>
 					<div class="form-group">
                         <label for="type">类型：</label>
-                        <select id="type" class="show-tick form-control selectRow"  name="type" data-max-options="1" multiple data-live-search="false">
+                        <select id="type" class="show-tick form-control selectRow"  name="type"  multiple data-live-search="false">
                             #if( $roleList)
-								#foreach($type in ${types})
-									<option value="$type">$type</option>
+								#foreach($role in $!roleList)
+									<option value="$role.id">$role.description</option>
 								#end
 							#end
                         </select>
@@ -123,62 +123,20 @@
             </div>
           </div>
         </div><!-- Modal end-->
-		<!--change Modal -->
-        <div class="modal fade" id="changeResourcesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="changeResourcesLabel">修改资源</h4>
-              </div>
-              <div class="modal-body">
-				<form role="form" id="changeForm" method="post" action="">
-                    <div class="form-group">
-                      <label for="childrenName">子名称:</label>
-                      <input type="text" name="name"  class="form-control" id="changeChildrenName" placeholder="需要修改的子资源名称">
-                    </div>
-                    <div class="form-group">
-                      <label for="urlName">URL路径:</label>
-                      <input type="text" class="form-control" name ="url" id="changeUrlName" placeholder="输入权限访问路径，如：/user">
-                    </div>
-                    <div class="form-group">
-                        <label for="permissionStr">权限字符串:</label>
-                        <input type="text" class="form-control" id="changePermissionStr" name="permission" placeholder="输入权限字符串，如：resource:*">
-                    </div>
-					<div class="form-group">
-                        <label for="type">类型：</label>
-                        <select id="changeType" class="show-tick form-control selectRow"  name="type" data-max-options="1" multiple data-live-search="false">
-                            #if( $roleList)
-								#foreach($type in ${types})
-									<option value="$type">$type</option>
-								#end
-							#end
-                        </select>
-                    </div>
-                </form>
-
-			  </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" id="changeButton" class="btn btn-primary">创建</button>
-              </div>
-            </div>
-          </div>
-        </div><!--change Modal end-->
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li >
-                <a href="${request.contextPath}/user">用户管理</a>
+                <a href="${request.contextPath}/user/">用户管理</a>
 			</li>
             <li>
-				<a href="${request.contextPath}/role">角色管理</a>
+				<a href="${request.contextPath}/role/">角色管理</a>
 			</li>
             <li class="active">
-				<a href="${request.contextPath}/resource">资源管理</a>
+				<a href="${request.contextPath}/resource/">资源管理</a>
 			</li>
             <li>
-				<a href="${request.contextPath}/organization">其他信息</a>
+				<a href="${request.contextPath}/organization/">其他信息</a>
 			</li>
           </ul>
         </div>
@@ -228,8 +186,7 @@
                             <td>${resource.url}</td>
                             <td>${resource.permission}</td>
 							<td>
-								<!--href="${request.contextPath}/resource/${resource.id}/update"--> 
-								<a  onclick="javascript:getUpdate(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#changeResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-edit"></span></a>
+								<a href="${request.contextPath}/resource/${resource.id}/update"><span class="glyphicon glyphicon-edit"></span></a>
 								#if(!${resource.type.equals('button')})
 									<a onclick="javascript:addResources(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#addResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-plus"></span></a>
 								#end
@@ -252,41 +209,20 @@
 
 </body>
 <script>
+// href="${request.contextPath}/resource/${resource.id}/appendChild"
     $(function() {
         $("#table").treetable({ expandable: true }).treetable("expandNode", 1);
     });
 	function addResources(id,name){
 		$("#fatherNode").html(name);
-		$("#createForm").attr("action","${request.contextPath}/resource/"+id+"/appendChild");
+		$("#createForm").attr("action","${request.contextPath}/resource/"+id+"}/appendChild");
 	}
 	$("#createButton").click(function(){
 		$("#createForm").submit();
-	});
-	
-	$("#changeButton").click(function(){
-		$("#changeForm").submit();
 	});
 	function deleteResources(id,name){
 		$("#deleteInfo").html("确定删除："+name+"?");
 		$("#deleteButton").attr("href","${request.contextPath}/resource/"+id+"/delete");
 	}
-	function getUpdate(id,parentName){
-		$.ajax({
-			type:"post",
-			url:"${request.contextPath}/resource/"+id+"/getUpdate",
-			async:false,
-			data:{},
-			success:function(result){
-				$("#changeChildrenName").val(result.name);
-				$("#changeUrlName").val(result.url);
-				$("#changePermissionStr").val(result.permission);
-				$('#changeType').selectpicker('val', result.type);
-				$("#changeForm").attr("action","${request.contextPath}/resource/"+id+"/update");
-			}
-		});
-	}
-	$('.selectRow').selectpicker({
-		size: 4
-	});
 </script>
 </html>

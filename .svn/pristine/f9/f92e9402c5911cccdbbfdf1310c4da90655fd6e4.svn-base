@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>资源管理</title>
+    <title></title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="${request.contextPath}/">RuiBoTai: 欢迎,$user.username</a>
+          <a class="navbar-brand" href="${request.contextPath}/user">RuiBoTai: 欢迎,$user.username</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -169,16 +169,16 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li >
-                <a href="${request.contextPath}/user">用户管理</a>
+                <a href="${request.contextPath}/user/">用户管理</a>
 			</li>
             <li>
-				<a href="${request.contextPath}/role">角色管理</a>
+				<a href="${request.contextPath}/role/">角色管理</a>
 			</li>
             <li class="active">
-				<a href="${request.contextPath}/resource">资源管理</a>
+				<a href="${request.contextPath}/resource/">资源管理</a>
 			</li>
             <li>
-				<a href="${request.contextPath}/organization">其他信息</a>
+				<a href="${request.contextPath}/organization/">其他信息</a>
 			</li>
           </ul>
         </div>
@@ -229,7 +229,7 @@
                             <td>${resource.permission}</td>
 							<td>
 								<!--href="${request.contextPath}/resource/${resource.id}/update"--> 
-								<a  onclick="javascript:getUpdate(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#changeResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-edit"></span></a>
+								<a onclick="javascript:getUpdate(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#changeResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-edit"></span></a>
 								#if(!${resource.type.equals('button')})
 									<a onclick="javascript:addResources(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#addResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-plus"></span></a>
 								#end

@@ -7,8 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.vpcloud.shiro.pojo.Resource;
@@ -44,34 +42,22 @@ public class ResourceController {
 	}
 	@RequiresPermissions("resource:create")
 	@RequestMapping(value = "/{parentId}/appendChild")
-	public String appendChildForm(@PathVariable("parentId") Long parentId,Resource resource){
+	public String appendChildForm(@PathVariable("parentId") Long parentId, Model model){
 		Resource parent = resourceService.findOne(parentId);
-		resource.setParentId(parentId);
-		resource.setParentIds(parent.makeSelfAsParentIds());
-		resourceService.createResource(resource);
-		return "redirect:/resource";
+		model.addAttribute("parent",parent);
+		Resource child = new Resource();
+		child.setParentId(parentId);
+		child.setParentIds(parent.makeSelfAsParentIds());
+		model.addAttribute("resource",child);
+		 return "/resource/edit";
 	}
 	@RequiresPermissions("resource:update")
     @RequestMapping(value = "/{id}/update")
-	public String update(@PathVariable("id") Long id,Resource resource) {
-		Resource oldResource = resourceService.findOne(id);
-		resource.setParentId(oldResource.getParentId());
-		resource.setParentIds(oldResource.getParentIds());
-		resourceService.updateResource(resource);
+	public String update(Resource resource, RedirectAttributes redirectAttributes) {
+        resourceService.updateResource(resource);
         return "redirect:/resource";
     }
-	@RequiresPermissions("resource:update")
-    @RequestMapping(value = "/{id}/getUpdate")
-	@ResponseBody
-    public Resource showUpdateForm(@PathVariable("id") Long id) {
-        return resourceService.findOne(id);
-    }
-	@RequiresPermissions("resource:delete")
-    @RequestMapping(value = "/{id}/delete")
-    public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        resourceService.deleteResource(id);
-        return "redirect:/resource";
-    }
+	
 	private void setCommonData(Model model) {
         model.addAttribute("organizationList", organizationService.findAll());
         model.addAttribute("roleList", roleService.findAll());

@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>角色管理</title>
+    <title>用户管理</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     
     <!-- 可选的Bootstrap主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
     
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="${request.contextPath}/static/js/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="${request.contextPath}/static/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 	<!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
     
     <!-- Latest compiled and minified JavaScript -->
-    <script src="${request.contextPath}/static/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
+    <script src="${request.contextPath}/static/js/bootstrap-datetimepicker.js"></script>
+	<script >
+	
+    </script>
 
 	<style >
 		/*
@@ -146,9 +150,10 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">服务器状态</a></li>
-            <li><a href="${request.contextPath}/sys/Prefence">设置</a></li>
+            <li><a href="#">设置</a></li>
             <li><a href="#">参数简介</a></li>
             <li><a href="#">帮助</a></li>
+			<li><a href="./logout">退出</a></li>
           </ul>
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="查找...">
@@ -163,80 +168,42 @@
             <li>
                 <a href="${request.contextPath}/user">用户管理</a>
 			</li>
-            <li class="active">
+            <li>
 				<a href="${request.contextPath}/role">角色管理</a>
 			</li>
             <li>
 				<a href="${request.contextPath}/resource">资源管理</a>
 			</li>
-            <li>
+            <li  class="active">
 				<a href="${request.contextPath}/organization">其他信息</a>
 			</li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">服务器状态</h1>
-
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
-              <h4>JVM状态</h4>
-              <span class="text-muted">描述信息</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
-              <h4>DB状态</h4>
-              <span class="text-muted">描述信息</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
-              <h4>Network状态</h4>
-              <span class="text-muted">描述信息</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
-              <h4>连接用户数</h4>
-              <span class="text-muted">描述信息</span>
-            </div>
-          </div>
-
-		  <h2 class="sub-header">角色列表</h2>
-		  
-		  	<!-- Button trigger modal -->
-            <button type="button" id="addRole" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-				增加角色
-            </button>
-            <button type="button" class="btn btn-success">Other</button>
-  
-            
-            <!-- Modal -->
+         
+		  <h2 class="sub-header" >系统列表</h2>
+		  <button type="button" id="addRole" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+				增加系统
+          </button>
+		
+		<!-- Modal -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">创建角色</h4>
+                    <h4 class="modal-title" id="myModalLabel">添加系统</h4>
                   </div>
                   <div class="modal-body">
-					<form role="form" id="role" method="post" action="${request.contextPath}/role/create">
+					<form role="form" id="organ" method="post" action="${request.contextPath}/organization/create">
                       <div class="form-group">
-                        <label for="rolename">角色名称</label>
-                        <input type="text" name="role" class="form-control" id="rolename" placeholder="Role Name">
+                        <label for="organname">系统名称</label>
+                        <input type="text" name="name" class="form-control" id="organname" placeholder="Organ Name">
                       </div>
-                      <div class="form-group">
-                        <label for="Description">角色描述</label>
-                        <input type="text" name="description"  class="form-control" id="description" placeholder="Role Description">
-                      </div>
-					  
 					  <div class="form-group">
-                        <label for="resources">权限列表</label>
-                        <select id="resourceIds" name="resourceIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
-                                #foreach($Rescource in $Rescourcelist)
-									<option value="$Rescource.id">$Rescource.name</option>
-								#end
-                        </select>
+                        <label for="resources">创建时间</label>
+                       	<input size="16" type="text" name="createDate" value="2012-06-15 14:45" readonly class="form_datetime form-control">
                       </div>
-                      
                       <div class="form-group">
                         <label for="Availables">是否启用</label>
                         <select id="available" name="available" class="selectpicker show-tick form-control" data-live-search="false">
@@ -255,36 +222,34 @@
                 </div>
               </div>
             </div>
-		  
+       <!--End Modal-->		  
           <div class="table-responsive">
 			<table class="table table-striped">
                 <thead>
                     <tr>
 						<th>#</th>
-                        <th>角色名称</th>
-                        <th>角色描述</th>
-                        <th>权限列表</th>
-                        <th>是否启用</th>
+                        <th>系统名称</th>
+                        <th>创建时间</th>
+                        <th>是否有效</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
-            		#foreach($role in $!AllRoleList)
+            		#foreach($Organization in $!organList)
             			<tr >
-							<th>${role.id}</th>
-                            <td>${role.role}</td>
-            				<td>${role.description}</td>
-            				<td>${role.resourcename}</td>
+							<th>${Organization.id}</th>
+                            <td>${Organization.name}</td>
+            				<td>${Organization.createDate}</td>
             				<td>
-     							#if (${role.available}==true)
+            					#if (${Organization.available}==true)
      								是
      							#else
      								否
      							#end
             				</td>
                             <td>
-            					<a class="btn btn-default btn-xs" onclick="javascript:updaterole('${role.id}','${role.role}','${role.description}',${role.resourceIds},'${role.available}')" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-cog"></span></a>     					
-            				    <a class="btn btn-default btn-xs" onclick="javascript:deleterole(${role.id},'${role.role}')" data-toggle="modal" data-target="#deleteroleModal"><span class="glyphicon glyphicon-trash"></span></a>
+            					<a class="btn btn-default btn-xs" onclick="javascript:updateorgan('${Organization.id}','${Organization.name}','${Organization.createDate}','${Organization.available}')" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-cog"></span></a>     					
+            				    <a class="btn btn-default btn-xs" onclick="javascript:deleteorgan(${Organization.id},'${Organization.name}')" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-trash"></span></a> 
             				</td>
                         </tr>
             		#end
@@ -294,8 +259,7 @@
         </div>
       </div>
     </div>
-    
-    <!-- Modal update-->
+ <!-- Modal update-->
             <div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -304,27 +268,19 @@
                     <h4 class="modal-title" id="myModalLabel">角色信息更新</h4>
                   </div>
                   <div class="modal-body">
-					<form role="form" id="updaterole" method="post" action="${request.contextPath}/role/update">
-					  <input type="text" name="id" id="updateroleid" hidden="hidden">
+					<form role="form" id="updaterole" method="post" action="${request.contextPath}/organization/update">
+					  <input type="text" name="id" id="updateorganid" hidden="hidden">
                       <div class="form-group">
-                        <label for="rolename">角色名称</label>
-                        <input type="text" name="role" class="form-control" id="updaterolename" placeholder="Role Name">
+                        <label for="rolename">系统名称</label>
+                        <input type="text" name="name" class="form-control" id="updateorganname" placeholder="Organ Name">
                       </div>
-                      <div class="form-group">
-                        <label for="Description">角色描述</label>
-                        <input type="text" name="description"  class="form-control" id="updatedescription" placeholder="Role Description">
-                      </div>
-					  <div class="form-group">
-                        <label for="updateresourceIds">权限列表</label>
-                        <select id="updateresourceIds" name="resourceIds" class="selectpicker show-tick form-control" multiple data-live-search="false">
-                                #foreach($Rescource in $Rescourcelist)
-									<option value="$Rescource.id">$Rescource.name</option>
-								#end
-                        </select>
+          			  <div class="form-group">
+                        <label for="resources">创建时间</label>
+                       	<input size="16" type="text" name="createDate" id="updateorgantime" value="2012-06-15 14:45" readonly class="form_datetime form-control">
                       </div>
                       <div class="form-group">
                         <label for="updateavailable">是否启用</label>
-                        <select id="updateavailable" name="available" class="selectpicker show-tick form-control" data-live-search="false">
+                        <select id="updateorganavailable" name="available" class="selectpicker show-tick form-control" data-live-search="false">
 								<option value=true>是</option>
 								<option value=false>否</option>
                         </select>
@@ -340,12 +296,12 @@
           	</div>   
     <!--End Modal-->
 	<!--delete Modal -->
-			<div class="modal fade" id="deleteroleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">删除用户</h4>
+                    <h4 class="modal-title" id="myModalLabel">删除系统</h4>
                   </div>
                   <div class="modal-body">
 					<span id="deleteInfo">
@@ -358,29 +314,30 @@
                 </div>
               </div>
             </div>
-    <script>
-		$(function(){
-			$("#createButton").click(function(){
-				$("#role").submit();
-			});
-		});
-		$(function(){
-			$("#updateButton").click(function(){
-				$("#updaterole").submit();
-			});
-		});
-		function deleterole(id,name){
-			$("#deleteInfo").html("确定删除："+name+"?");
-			$("#deleteButton").attr("href","${request.contextPath}/role/"+id+"/delete");
-		}
-		function updaterole(id,name,description,resourceIds,available){
-			$("#updaterolename").attr("value",name);
-			$("#updateroleid").attr("value",id);
-			$("#updatedescription").attr("value",description);
-			$('#updateresourceIds').selectpicker('val', resourceIds);
-			console.log(typeof(resourceIds))
-			$('#updateavailable').selectpicker('val', available);
-		}
-	</script>
+    <!--End Modal-->
 </body>
+<script>
+	function deleteorgan(id,name){
+		$("#deleteInfo").html("确定删除："+name+"?");
+		$("#deleteButton").attr("href","${request.contextPath}/organization/"+id+"/delete");
+	}
+	 $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
+	$('#datetimepicker').datetimepicker();
+	function updateorgan(id,name,time,available){
+		$("#updateorganname").attr("value",name);
+		$("#updateorganid").attr("value",id);
+		$("#updateorgantime").attr("value",time);
+		$('#updateorganavailable').selectpicker('val', available);
+	}
+	$(function(){
+		$("#updateButton").click(function(){
+		$("#updaterole").submit();
+		});
+	});
+	$(function(){
+		$("#createButton").click(function(){
+		$("#organ").submit();
+		});
+	});
+</script>
 </html>

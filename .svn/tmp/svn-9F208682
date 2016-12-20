@@ -209,7 +209,7 @@
                     <h4 class="modal-title" id="updateModalLabel">修改用户信息</h4>
                   </div>
                   <div class="modal-body">
-					<form role="form" id="updateForm" method="post" action="${request.contextPath}/user/create">
+					<form role="form" id="updateForm" method="post" action="./user/create">
                         <div class="form-group">
                           <label for="updata-username">Email address</label>
                           <input type="email" name="username" class="form-control" id="updata-username" placeholder="Enter email" required="" >
@@ -278,7 +278,7 @@
 								
 							</td>
                             <td>
-								<a class="btn btn-default btn-xs" onclick="javascript:changeInfo(${user.id},'${user.username}','${user.organizationId}',${user.roleIds})" data-toggle="modal" data-target="#updateUserModal"><span class="glyphicon glyphicon-edit"></span></a>
+								<a class="btn btn-default btn-xs" onclick="javascript:changeInfo(${user.id},'${user.username}','${user.organizationId}','${user.roleIds}')" data-toggle="modal" data-target="#updateUserModal"><span class="glyphicon glyphicon-edit"></span></a>
             					<a class="btn btn-default btn-xs" onclick="javascript:deleteUser(${user.id},'${user.username}')" data-toggle="modal" data-target="#deleteUserModal"><span class="glyphicon glyphicon-trash"></span></a>
             					<a class="btn btn-default btn-xs" onclick="javascript:changePassword(${user.id},'${user.username}')" data-toggle="modal" data-target="#changeUserModal"><span class="glyphicon glyphicon-cog"></span></a> 
             				</td>
@@ -293,9 +293,6 @@
 
 </body>
 <script>
-	$('.selectRow').selectpicker({
-		size: 4
-	});
 	function changePassword(id,name){
 		$("#changeForm").attr("action","${request.contextPath}/user/"+id+"/changePassword")
 	}
@@ -306,8 +303,6 @@
 	function changeInfo(id,username,org,roles){
 		$("#updata-username").val(username);
 		$("#updateForm").attr("action","${request.contextPath}/user/"+id+"/update");
-		$("#update-roleIds").selectpicker('val',roles);
-		$("#update-organizationId").selectpicker('val',org);
 	}
 	$("#createButton").click(function(){
 		$("#userForm").submit();
@@ -319,7 +314,9 @@
 		$("#changeForm").submit();
 	});
 	//href="${request.contextPath}/user/${user.id}/delete"  deleteUserModal
-	
+	$('.selectRow').selectpicker({
+		size: 4
+	});
 
 
 	
