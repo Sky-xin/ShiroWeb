@@ -100,11 +100,10 @@
 
 	<!-- 基于Form表单的身份验证过滤器 -->
 	<bean id="formAuthenticationFilter"
-		class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
-		<property name="usernameParam" value="username" />
-		<property name="passwordParam" value="password" />
-		<property name="rememberMeParam" value="rememberMe" />
-		<property name="loginUrl" value="/login" />
+		class="com.vpcloud.shiro.controller.filter.ServerFormAuthenticationFilter">
+		<property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="rememberMeParam" value="rememberMe"/>
 	</bean>
 	
 	<bean id="sysUserFilter"
@@ -122,6 +121,7 @@
 		</property>
 		<property name="filterChainDefinitions">
 			<value>
+				/remoteService = anon
 				/index = anon
 				/login = authc
 				/logout = logout

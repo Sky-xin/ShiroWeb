@@ -83,5 +83,5 @@
 	<bean class="com.vpcloud.shiro.controller.exception.DefaultExceptionHandler" />
 
 	<import resource="spring-mvc-shiro.xml" />
-
+	<import resource="spring-mvc-remote-service.xml"/>
 </beans>

@@ -1,0 +1,292 @@
+<html>
+<head>
+    <title>资源管理</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap.min.css">
+    
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-theme.css">
+    
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="${request.contextPath}/static/js/jquery.min.js"></script>
+    
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="${request.contextPath}/static/js/bootstrap.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="${request.contextPath}/static/css/bootstrap-select.min.css">
+	<link rel="stylesheet" href="${request.contextPath}/static/css/list.css">
+    <link rel="stylesheet" href="${request.contextPath}/static/css/jquery.treetable.css">
+    <link rel="stylesheet" href="${request.contextPath}/static/css/jquery.treetable.theme.default.css">
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="${request.contextPath}/static/js/bootstrap-select.min.js"></script>
+	<script src="${request.contextPath}/static/js/jquery.treetable.js"></script>
+    <style>
+        #table th, #table td {
+            font-size: 14px;
+            padding : 8px;
+        }
+
+    </style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="${request.contextPath}/">RuiBoTai: 欢迎,$user.username</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">服务器状态</a></li>
+            <li><a href="#">设置</a></li>
+            <li><a href="#">参数简介</a></li>
+            <li><a href="${request.contextPath}/help">帮助</a></li>
+			<li><a href="${request.contextPath}/logout">退出</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="查找...">
+          </form>
+        </div>
+      </div>
+    </nav>
+	<div class="container-fluid">
+    	<!--delete Modal -->
+    	<div class="modal fade" id="deleteResourcesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">删除用户</h4>
+              </div>
+              <div class="modal-body">
+    			<span id="deleteInfo">
+                </span>
+    		  </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <a type="button" id="deleteButton" class="btn btn-primary">确定</a>
+              </div>
+            </div>
+          </div>
+        </div><!--delete Modal end-->
+		<!-- Modal -->
+        <div class="modal fade" id="addResourcesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="resourcesModalLabel">创建子资源</h4>
+              </div>
+              <div class="modal-body">
+				<form role="form" id="createForm" method="post" action="">
+                    <div class="form-group">
+                      <label for="fatherNode">父节点名称:</label><span id="fatherNode"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="childrenName">子名称:</label>
+                      <input type="text" name="name"  class="form-control" id="childrenName" placeholder="需要创建的子资源名称">
+                    </div>
+                    <div class="form-group">
+                      <label for="urlName">URL路径:</label>
+                      <input type="text" class="form-control" name ="url" id="urlName" placeholder="输入权限访问路径，如：/user">
+                    </div>
+                    <div class="form-group">
+                        <label for="permissionStr">权限字符串:</label>
+                        <input type="text" class="form-control" id="permissionStr" name="permission" placeholder="输入权限字符串，如：resource:*">
+                    </div>
+					<div class="form-group">
+                        <label for="type">类型：</label>
+                        <select id="type" class="show-tick form-control selectRow"  name="type" data-max-options="1" multiple data-live-search="false">
+                            #if( $roleList)
+								#foreach($type in ${types})
+									<option value="$type">$type</option>
+								#end
+							#end
+                        </select>
+                    </div>
+                </form>
+
+			  </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="createButton" class="btn btn-primary">创建</button>
+              </div>
+            </div>
+          </div>
+        </div><!-- Modal end-->
+		<!--change Modal -->
+        <div class="modal fade" id="changeResourcesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="changeResourcesLabel">修改资源</h4>
+              </div>
+              <div class="modal-body">
+				<form role="form" id="changeForm" method="post" action="">
+                    <div class="form-group">
+                      <label for="childrenName">子名称:</label>
+                      <input type="text" name="name"  class="form-control" id="changeChildrenName" placeholder="需要修改的子资源名称">
+                    </div>
+                    <div class="form-group">
+                      <label for="urlName">URL路径:</label>
+                      <input type="text" class="form-control" name ="url" id="changeUrlName" placeholder="输入权限访问路径，如：/user">
+                    </div>
+                    <div class="form-group">
+                        <label for="permissionStr">权限字符串:</label>
+                        <input type="text" class="form-control" id="changePermissionStr" name="permission" placeholder="输入权限字符串，如：resource:*">
+                    </div>
+					<div class="form-group">
+                        <label for="type">类型：</label>
+                        <select id="changeType" class="show-tick form-control selectRow"  name="type" data-max-options="1" multiple data-live-search="false">
+                            #if( $roleList)
+								#foreach($type in ${types})
+									<option value="$type">$type</option>
+								#end
+							#end
+                        </select>
+                    </div>
+                </form>
+
+			  </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="changeButton" class="btn btn-primary">创建</button>
+              </div>
+            </div>
+          </div>
+        </div><!--change Modal end-->
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li >
+                <a href="${request.contextPath}/user">用户管理</a>
+			</li>
+            <li>
+				<a href="${request.contextPath}/role">角色管理</a>
+			</li>
+            <li class="active">
+				<a href="${request.contextPath}/resource">资源管理</a>
+			</li>
+            <li>
+				<a href="${request.contextPath}/organization">其他信息</a>
+			</li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">服务器状态</h1>
+
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>JVM状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>DB状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>Network状态</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="200x200" src="$!url" data-holder-rendered="true">
+              <h4>连接用户数</h4>
+              <span class="text-muted">描述信息</span>
+            </div>
+          </div>
+		  <h2 class="sub-header" >用户列表</h2>
+
+          <div class="table-responsive">
+			<table id="table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>URL路径</th>
+                        <th>权限字符串</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+					#foreach($resource in $!{resourceList})
+						<tr data-tt-id='${resource.id}' #if(!${resource.rootNode})data-tt-parent-id='${resource.parentId}'#end>
+                            <td>${resource.name}</td>
+                            <td>${resource.type.info}</td>
+                            <td>${resource.url}</td>
+                            <td>${resource.permission}</td>
+							<td>
+								<!--href="${request.contextPath}/resource/${resource.id}/update"--> 
+								<a  onclick="javascript:getUpdate(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#changeResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-edit"></span></a>
+								#if(!${resource.type.equals('button')})
+									<a onclick="javascript:addResources(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#addResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-plus"></span></a>
+								#end
+								#if(!${resource.rootNode})
+									<a onclick="javascript:deleteResources(${resource.id},'${resource.name}')" data-toggle="modal" data-target="#deleteResourcesModal" data-id="${resource.id}"><span class="glyphicon glyphicon-trash"></span></a>
+								#end
+							
+							</td>
+						
+						</tr>
+						
+					#end
+                </tbody>
+        	</table>
+          </div><!-- table div end -->
+        </div>
+      </div>
+    </div>
+
+
+</body>
+<script>
+    $(function() {
+        $("#table").treetable({ expandable: true }).treetable("expandNode", 1);
+    });
+	function addResources(id,name){
+		$("#fatherNode").html(name);
+		$("#createForm").attr("action","${request.contextPath}/resource/"+id+"/appendChild");
+	}
+	$("#createButton").click(function(){
+		$("#createForm").submit();
+	});
+	
+	$("#changeButton").click(function(){
+		$("#changeForm").submit();
+	});
+	function deleteResources(id,name){
+		$("#deleteInfo").html("确定删除："+name+"?");
+		$("#deleteButton").attr("href","${request.contextPath}/resource/"+id+"/delete");
+	}
+	function getUpdate(id,parentName){
+		$.ajax({
+			type:"post",
+			url:"${request.contextPath}/resource/"+id+"/getUpdate",
+			async:false,
+			data:{},
+			success:function(result){
+				$("#changeChildrenName").val(result.name);
+				$("#changeUrlName").val(result.url);
+				$("#changePermissionStr").val(result.permission);
+				$('#changeType').selectpicker('val', result.type);
+				$("#changeForm").attr("action","${request.contextPath}/resource/"+id+"/update");
+			}
+		});
+	}
+	$('.selectRow').selectpicker({
+		size: 4
+	});
+</script>
+</html>
